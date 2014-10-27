@@ -1,16 +1,19 @@
-package Decoding;
+package decoding;
 
-import Models.ProductInfoModel;
-import Models.StatusModel;
+import models.InterfaceStatsModel;
+import models.ProductInfoModel;
+import models.StatusModel;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by marksv on 24/10/14.
  */
-public class Decode {
+public class Commands {
+
+    /* DECODING PRODUCT INFO */
 
     public static ProductInfoModel decodeProductInfo(byte[] data) {
         data = Arrays.copyOfRange(data, 3, data.length);
@@ -20,7 +23,7 @@ public class Decode {
         String rf = rfLookup(data[5]);
         String description = new String(Arrays.copyOfRange(data, 6, 16));
         String firmware = data[16] + "." + data[17];
-        String interfaces = decodeInterfaces(Arrays.copyOfRange(data, 18, data.length));
+        HashMap<Integer, String> interfaces = decodeInterfaces(Arrays.copyOfRange(data, 18, data.length));
 
         return new ProductInfoModel(serial, product, rf, description, firmware, interfaces);
     }
@@ -46,18 +49,20 @@ public class Decode {
         }
     }
 
-    private static String decodeInterfaces(byte[] L) {
+    private static HashMap<Integer, String> decodeInterfaces(byte[] L) {
         int n = L[0];
         byte[] tail = Arrays.copyOfRange(L, 1, L.length);
         int i, k, v;
-        String interfaces = "";
+//        String interfaces = "";
+        HashMap<Integer, String> interfaces = new HashMap<Integer, String>();
 
         for (int x = 0; x < n; x++) {
             i = x * 2;
             k = tail[i];
             v = tail[i + 1];
 
-            interfaces += "[ " + k + ": " + iface(v) + " ] ";
+//            interfaces += "[ " + k + ": " + iface(v) + " ] ";
+            interfaces.put(k, iface(v));
         }
         return interfaces;
     }
@@ -73,6 +78,8 @@ public class Decode {
         }
     }
 
+    /* DECODING STATUS */
+
     public static StatusModel decodeStatus(byte[] data) {
         byte[] radio = Arrays.copyOfRange(data, 3, 6);
         byte iface = radio[2];
@@ -83,7 +90,7 @@ public class Decode {
         String status = String.valueOf(data[2]);
         String ifacestr = describeStatus(iface);
         String debug_iface = bytesToHex(radio);
-        String size = "yodawg"; // What is this??
+        String size = Lib.bangInt(data[6], data[7]) + "";
         String unknown_b = bytesToHex(Arrays.copyOfRange(data, 8, 12));
         String unknown_c = bytesToHex(Arrays.copyOfRange(data, 12, 16));
         String unknown_d = bytesToHex(Arrays.copyOfRange(data, 16, 20));
@@ -105,7 +112,7 @@ public class Decode {
 
         @Override
         public String toString() {
-            return "StatusMap{" +
+            return "{" +
                     "received=" + received +
                     ", receiving=" + receiving +
                     ", transmitting=" + transmitting +
@@ -140,4 +147,24 @@ public class Decode {
 
         return statusMap.toString();
     }
+
+    /* DECODING INTERFACE STATS*/
+
+    public static InterfaceStatsModel decodeInterfaceStats(byte[] data) {
+        data = Arrays.copyOfRange(data, 3, data.length);
+        int received = Lib.bangLong(data[4], data[5], data[6], data[7]);
+        int transmit = Lib.bangLong(data[8], data[9], data[10], data[11]);
+
+        return new InterfaceStatsModel(data[0], data[1], data[2], data[3], received, transmit);
+    }
+
+    /* DECODING SIGNAL */
+
+    public static int decodeSignal(byte[] data) {
+        return data[3];
+    }
+
+    /* OTHER STUFF */
+
+//    public static ByteBuffer describeParams()
 }

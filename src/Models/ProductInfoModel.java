@@ -1,4 +1,6 @@
-package Models;
+package models;
+
+import java.util.HashMap;
 
 /**
  * Created by marksv on 24/10/14.
@@ -9,9 +11,9 @@ public class ProductInfoModel {
     private String rf;
     private String description;
     private String firmware;
-    private String interfaces;
+    private HashMap<Integer, String> interfaces;
 
-    public ProductInfoModel(String serial, String product, String rf, String description, String firmware, String interfaces) {
+    public ProductInfoModel(String serial, String product, String rf, String description, String firmware, HashMap<Integer, String> interfaces) {
         this.serial = serial;
         this.product = product;
         this.rf = rf;
@@ -40,7 +42,7 @@ public class ProductInfoModel {
         return firmware;
     }
 
-    public String getInterfaces() {
+    public HashMap<Integer, String> getInterfaces() {
         return interfaces;
     }
 
@@ -52,7 +54,7 @@ public class ProductInfoModel {
                 ", rf='" + rf + '\'' +
                 ", description='" + description + '\'' +
                 ", firmware='" + firmware + '\'' +
-                ", interfaces='" + interfaces + '\'' +
+                ", interfaces=" + interfaces.toString() +
                 '}';
     }
 }

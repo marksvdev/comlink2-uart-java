@@ -1,4 +1,5 @@
-import Decoding.Decode;
+import decoding.Commands;
+import decoding.Lib;
 
 /**
  * Created by marksv on 24/10/14.
@@ -12,7 +13,7 @@ public class Main {
 
 
 
-        String result_productinfo = Decode.decodeProductInfo(data_productInfo).toString();
+        String result_productinfo = Commands.decodeProductInfo(data_productInfo).toString();
 
         System.out.println(result_productinfo);
         System.out.println("==============================");
@@ -21,11 +22,16 @@ public class Main {
         //region status
         byte[] data_status = { 1, 85, 0, 0, 2, 0, 0, 0, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-        String result_status = Decode.decodeStatus(data_status).toString();
+        String result_status = Commands.decodeStatus(data_status).toString();
 
         System.out.println(result_status);
         System.out.println("==============================");
         //endregion
+
+
+//        byte[] foobar = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+//        int result = Lib.CRC8(foobar);
+//        System.out.println(result);
 
     }
 }
