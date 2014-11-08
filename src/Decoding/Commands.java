@@ -84,7 +84,7 @@ public class Commands {
         byte[] radio = Arrays.copyOfRange(data, 3, 6);
         byte iface = radio[2];
 
-        String ok = String.valueOf(data[0] == 1 && radio[1] == 0 && radio[2] == 2);
+        String ok = String.valueOf(data[0] == 1 && radio[0] == 0 && radio[1] == 2);
         String ack = String.valueOf(data[0]);
         String success = String.valueOf(data[1]);
         String status = String.valueOf(data[2]);
